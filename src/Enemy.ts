@@ -19,7 +19,8 @@ export class Enemy implements Fighter{
     attack(fighter: Character) {
         console.log('The Enemy handle you ' + this.attackPower + ' points life ');
 
-        return fighter.name
+        return fighter.life -= Math.ceil(this.attackPower / 2);
+
     }
 
     takeDamage(damage: number) {

@@ -51,12 +51,12 @@ const weaponsChoices = [
         ],
     }
 ];
-const choices = [
+const fightChoice = [
 
     {
         type: 'select' +
             '',
-        name: 'choice',
+        name: 'choiceP',
         message: 'Do you want to fight ? - Press 1 for yes and 0 for no',
         choices: [
             {title: 'Yes', value: 1},
@@ -69,74 +69,51 @@ const choices = [
 
     async () => {
         const response = await (prompts)(questions);
-
-
         let choose = await (prompts)(characterChoices);
+        let myCharacter = await chooseCharacter(choose.characterChoice, response.username, response.sex, 200)
 
-        // let {choice} = await (prompts)(choices);
-
-        console.log('Ennemi en approche !');
-        await fight(choose, choose.characterChoice);
-        console.log(choose);
-
+        do {
+            await fight(myCharacter);
+        } while (myCharacter.life > 0)
     }
 
 
 )();
 
 
-async function fight(choice: number, character: Character) {
+async function fight(character: Character) {
 
     let enemy = new Enemy();
+    console.log('Ennemi en approche !');
+    let fightIsRunning = 1
 
-    if (character instanceof Warrior || character instanceof Wizard || character instanceof Elfe || true) {
-        chooseCharacter(choice, character.name, character.sex, 200)
-        while (character.life >= 0 && (choice === 0|| choice === 1 || choice === 2)) {
-
+    do {
+        let promptResult = await (prompts)(fightChoice);
+        if (promptResult.choiceP === 1) {
             enemy.summary()
-            character.summary();
-
             character.attack(enemy);
-            if (character.life >= 0) {
-                if (enemy.life -= character.attackPower) {
-
-                }
-
-
-                console.log(choice);
+            if (enemy.life > 0) {
                 console.log(enemy.life);
-
-                if (enemy.life >= 0) {
-                    console.log('The enemy fight back');
-                    enemy.attack(character);
-                    character.life -= Math.ceil(enemy.attackPower / 2);
-                    console.log(character.life);
-
-
-                    let promptResult = await (prompts)(choices);
-                    choice = promptResult.choice;
-                    if (character.life <= 0 || enemy.life <= 0) {
-
-                    }
-                } else {
-                    console.log('win');
-                    return;
-                }
-            } else {
-                console.log('bye');
-                return;
+                console.log('The enemy fight back');
+                enemy.attack(character);
+                console.log(character.life);
             }
+        } else {
+            console.log('You escape from the battle, bitch')
+            fightIsRunning = 0
         }
+    } while (character.life > 0 && enemy.life > 0 && fightIsRunning == 1)
+    if (enemy.life <= 0) {
+        console.log('He die, little bitch')
+    } else {
+        console.log('You die, bitch')
     }
 }
-
 
 function chooseCharacter(choice: number, name: string, sex: string, life: number) {
     let char: Character;
     if (choice === 0) {
         char = new Warrior(name, sex, life);
-
-
         console.log(char)
     } else if (choice === 1) {
         char = new Wizard(name, sex, life);
@@ -146,5 +123,6 @@ function chooseCharacter(choice: number, name: string, sex: string, life: number
         console.log(char);
     }
     return char;
+
 }
 

@@ -40,7 +40,9 @@ export  abstract class Character implements Fighter {
 
         console.log('You handle ' + this.attackPower + ' points life to your enemy');
 
-        return fighter.name
+        return fighter.life -= Math.ceil(this.attackPower);
+
+
     }
 
     takeDamage(damage: number): void {
