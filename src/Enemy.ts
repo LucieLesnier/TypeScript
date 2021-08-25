@@ -1,4 +1,5 @@
 import {Character} from "./character";
+import {Fighter} from "./Fighter";
 
 export class Enemy implements Fighter{
     name: string;
@@ -14,13 +15,15 @@ export class Enemy implements Fighter{
     summary() {
         console.log(this);
     }
-    attack(charac : Character) {
+
+    attack(fighter: Character) {
         console.log('The Enemy handle you ' + this.attackPower + ' points life ');
 
-        return charac.name
+        return fighter.name
     }
 
-
-
-
+    takeDamage(damage: number) {
+ damage = this.life - 50;
+        console.log(damage);
+    }
 }
